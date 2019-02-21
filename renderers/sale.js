@@ -27,7 +27,6 @@ db.collection("clients").get().then(function(querySnapshot) {
 
 autocomplete(document.getElementById("productName"), products);
 autocomplete(document.getElementById("clientName"), clients);
-
 // PRODUCT LINE ITEM
 
 var productLine = document.getElementById('productLine');
@@ -101,24 +100,21 @@ function subtractQuantity(p,saleProdQuantity,sale){
       var newQ = actualQuantity - saleProdQuantity;
       p.update({'quantity':newQ})
       productsToUpdate.push(querySnapshot.data().name)
+        console.log('productsToUpdate: '+productsToUpdate.length);
+          console.log('sale.products.length: '+sale.products.length);
       if(productsToUpdate.length == sale.products.length){
-
         productsToUpdate = []
         alert('Venta salvada exitosamente');
-        var window = remote.getCurrentWindow();
-        window.close();
       }
   })
 }
 function saveSale(sale){
   db.collection('sales').add(sale)
       .then(function(docRef) {
-        console.log('sale.products.length: '+sale.products.length);
           for(var i = 0; i < sale.products.length; i++){
             var p = db.collection('products').doc(sale.products[i].productName)
             var saleProdQuantity = sale.products[i].productQuantity
 
-            console.log('saleProdQuantity: '+saleProdQuantity);
             subtractQuantity(p,saleProdQuantity,sale)
           }
 

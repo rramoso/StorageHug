@@ -63,6 +63,18 @@ const mainMenuTemplate = [
     ]
   },
   {
+      label: 'Ventas',
+      submenu:[
+        {
+          label: 'Todas las Ventas',
+          accelerator: process.platform == 'darwin'? 'Command+Shift+S':'Ctrl+Shift+S',
+          click(){
+            createAllSaleWindow();
+          }
+        }
+      ]
+  },
+  {
     label: 'Edit',
     submenu: [
         { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
@@ -99,6 +111,10 @@ function createWindow () {
   mainWindow.loadFile('./templates/main.html')
   // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
 
+  ipcMain.on('viewAllSales',function(event,saleId) {
+      console.log("Sale: "+saleId);
+      createProductsWindow()
+  });
   mainWindow.on('close', function () {
     app.quit();
 
@@ -128,6 +144,28 @@ function createNewSaleWindow(){
 
 }
 
+
+function createViewSaleWindow(){
+  addWindow = new BrowserWindow({width: 800, height: 500,title:'Vista Venta'})
+
+  addWindow.loadFile('./templates/saleView.html')
+  addWindow.on('close', function () {
+    addWindow = null;
+  });
+
+}
+
+
+function createAllSaleWindow(){
+  addWindow = new BrowserWindow({width: 800, height: 500,title:'Vista Venta'})
+
+  addWindow.loadFile('./templates/allSales.html')
+  addWindow.on('close', function () {
+    addWindow = null;
+  });
+
+}
+
 // Handle create add Window
 function createNewClientWindow(){
   newLoanWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nuevo Cliente'})
@@ -150,10 +188,6 @@ function createProductsWindow(){
 
 }
 
-ipcMain.on('add:newClient',(e,docId) => {
-    console.log("NAME: "+docId);
-    addWindow.close()
-});
 
 ipcMain.on('loan:newClient',(e) => {
     createNewProductWindow();
