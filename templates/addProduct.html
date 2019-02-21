@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script type="text/javascript">
+    window.$ = window.jQuery = require('jquery');
+  </script>
+  <script type="text/javascript"  src="vendor/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script type="text/javascript" src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Page level plugin JavaScript-->
+  <script type="text/javascript" src="vendor/chart.js/Chart.min.js"></script>
+  <script type="text/javascript" src="vendor/datatables/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="vendor/datatables/dataTables.bootstrap4.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script type="text/javascript" src="js/sb-admin.min.js"></script>
+
+  <!-- Demo scripts for this page-->
+  <script type="text/javascript" src="js/demo/datatables-demo.js"></script>
+  <script type="text/javascript" src="js/demo/chart-area-demo.js"></script>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Agregar Nuevo Producto</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+  <!-- Page level plugin CSS-->
+  <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+  <!-- Bootstrap core JavaScript-->
+
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+    <div class="card card-register mx-auto mt-5">
+      <div class="card-header">Registra Nuevo Producto </div>
+      <div class="card-body">
+        <form>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="productName" class="form-control" required="required" placeholder="Nombre" autofocus="autofocus">
+                  <label for="productName">Nombre Producto</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="text" id="productType" class="form-control" placeholder="Tipo" required="required">
+                  <label for="productType">Tipo Producto</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-4">
+                <div class="form-label-group">
+                  <input type="number" id="productQuantity" class="form-control" placeholder="Last name" required="required">
+                  <label for="productQuantity">Cantidad</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-label-group">
+                  <input type="number" id="productCost" class="form-control" placeholder="Password" required="required">
+                  <label for="productCost">Costo Compra</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-label-group">
+                  <input type="number" id="productPrice" class="form-control" placeholder="Confirm password" required="required">
+                  <label for="productPrice">Precio Venta</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label-group">
+              <input type="text" id="productDescription" class="form-control" placeholder="Email address" required="required">
+              <label for="productDescription">Descripcion</label>
+            </div>
+            <div class="form-label-group">
+              <input type="text" id="productDate" class="form-control" placeholder="Email address" required="required">
+              <label for="productDate">Fecha de compra</label>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-block" id="addProductBtn">Agregar Producto</button>
+        </form>
+        <div class="text-center">
+          <a class="d-block small mt-3" href="">Este producto incluye mas productos? </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  require('../renderers/add_product.js')
+
+
+  </script>
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+</body>
+
+</html>
