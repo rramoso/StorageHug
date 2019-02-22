@@ -27,6 +27,21 @@ db.collection("clients").get().then(function(querySnapshot) {
 
 autocomplete(document.getElementById("productName"), products);
 autocomplete(document.getElementById("clientName"), clients);
+document.getElementsByName('quantity').forEach(function (elem) {
+  elem.addEventListener("input", function() {
+    var quantityTotalIni = parseInt(document.getElementById('totalQuantity').innerHTML)
+
+    document.getElementById('totalQuantity').innerHTML = quantityTotalIni + parseInt(elem.value)
+});
+document.getElementsByName('price').forEach(function (elem) {
+  elem.addEventListener("input", function() {
+       var quantityTotalIni = parseInt(document.getElementById('totalQuantity').innerHTML)
+
+       document.getElementById('totalRevenue').innerHTML = quantityTotalIni + parseInt(elem.value)
+   });
+
+})
+})
 // PRODUCT LINE ITEM
 
 var productLine = document.getElementById('productLine');
@@ -37,7 +52,25 @@ addProduct.addEventListener('click', function(){
   productLine.appendChild(newProductLine());
   var productLineIndex = document.getElementById('productLine').children.length - 1
   autocomplete(document.getElementById("productName"+productLineIndex), products);
+
+  document.getElementsByName('quantity').forEach(function (elem) {
+    elem.addEventListener("input", function() {
+         var quantityTotalIni = parseInt(document.getElementById('totalQuantity').innerHTML)
+         document.getElementById('totalQuantity').innerHTML = quantityTotalIni + parseInt(elem.value)
+     });
+
+  })
+
+  document.getElementsByName('price').forEach(function (elem) {
+    elem.addEventListener("input", function() {
+         var priceInTotal = parseInt(document.getElementById('totalRevenue').innerHTML)
+         var priceInteger = priceInTotal + parseInt(elem.value)
+         document.getElementById('totalRevenue').innerHTML = priceInteger
+     });
+
+  })
 })
+
 
 saveSaleBtn.addEventListener('click', function(){
 
@@ -173,7 +206,7 @@ function newProductLine(){
   var input2 = document.createElement('input')
     input2.setAttribute('class','form-control')
     input2.setAttribute('type','number')
-    // input2.setAttribute('placeholder','number')
+    input2.setAttribute('name','quantity')
     input2.setAttribute('id','productQuantity'+n)
   var label2 = document.createElement('label')
     label2.innerHTML = 'Cantidad'
@@ -190,7 +223,7 @@ function newProductLine(){
   var input3 = document.createElement('input')
     input3.setAttribute('class','form-control')
     input3.setAttribute('type','number')
-    // input3.setAttribute('placeholder','number')
+    input3.setAttribute('name','price')
     input3.setAttribute('id','productPrice'+n)
   var label3 = document.createElement('label')
     label3.innerHTML = 'Precio'

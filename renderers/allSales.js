@@ -2,7 +2,7 @@
 require('../firebase/firebase.js')
 const remote = require('electron').remote;
 
-const ipcRenderer = require('electron').ipcRenderer;
+const {ipcRenderer} = require('electron');
 
 
 var db = firebase.firestore();
@@ -19,7 +19,7 @@ db.collection("sales").get().then(function(querySnapshot) {
         var row = [doc.id,
                    doc.data().client,
                   new Date(doc.data().Date.seconds*1000),
-                  '<button id="addProduct" onclick="ipcRenderer.send('+"'viewAllSales',"+"'wtf'"+')" class="btn btn-info" type="button" name="button"><b>Ver Factura</b></button>'
+                  '<button id="addProduct" onclick="conio('+"'"+doc.id+"'"+')" class="btn btn-info" type="button" name="button"><b>Ver Factura</b></button>'
                 ]
 
         table.row.add(row);
@@ -31,6 +31,3 @@ db.collection("sales").get().then(function(querySnapshot) {
     //   console.log(document.getElementById('dataTable').children[2].children[i])
     // }
 });
-function conio() {
-
-}

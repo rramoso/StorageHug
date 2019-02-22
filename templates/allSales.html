@@ -112,7 +112,7 @@
         <div class="card mb-3">
           <div class="card-header">
             <i class="fas fa-table"></i>
-            Ventas</div>
+            Ventas <button id="updateBtn" onclick="conio()" class="btn btn-info" type="button" name="button"><b>Ver Factura</b></button></div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -165,12 +165,20 @@
   </a>
   <script>
   require('../renderers/allSales.js')
+  const {ipcRenderer} = require('electron');
 
-  const ipcRenderer = require('electron').ipcRenderer;
+  const updateBtn = document.getElementById('updateBtn')
 
+  updateBtn.addEventListener('click', function () {
+    ipcRenderer.send('update-notify-value','fuck')
 
-  function conio() {
-    ipcRenderer.send('view-allSales','coniossss')
+    // Close this window
+    // var window = remote.getCurrentWindow();
+    // window.close();
+  })
+  function conio(saleId) {
+    ipcRenderer.send('update-notify-value',saleId)
+    console.log(saleId);
   }
   </script>
 

@@ -1,15 +1,11 @@
 //Firebase
 // require('firebase')
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Menu, ipcMain} = require('electron')
-// require('./vendor/jquery/jquery.js')
+const {app, BrowserWindow, Menu} = require('electron')
+const ipcMain = require('electron').ipcMain
 // loadFile('./vendor/bootstrap/js/bootstrap.bundle.min.js')
-// loadFile('./vendor/jquery-easing/jquery.easing.min.js')
-// loadFile('./vendor/chart.js/Chart.min.js')
-// loadFile('./vendor/datatables/jquery.dataTables.js')
-// loadFile('./vendor/datatables/dataTables.bootstrap4.js')
-// loadFile('./js/sb-admin.min.js')
-// loadFile('./js/demo/chart-area-demo.js')
+
+
 let mainWindow
 
 const mainMenuTemplate = [
@@ -111,10 +107,7 @@ function createWindow () {
   mainWindow.loadFile('./templates/main.html')
   // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
 
-  ipcMain.on('viewAllSales',function(event,saleId) {
-      console.log("Sale: "+saleId);
-      createProductsWindow()
-  });
+
   mainWindow.on('close', function () {
     app.quit();
 
@@ -123,6 +116,32 @@ function createWindow () {
 
   Menu.setApplicationMenu(mainMenu);
 }
+// Handle View one sale
+ipcMain.on('update-notify-value',  (event, arg) => {
+  let win = new BrowserWindow({width: 800, height: 500,title:arg})
+  win.loadFile('./templates/saleView.html')
+  win.webContents.on('did-finish-load', () => {
+      win.webContents.send('saleID', arg);
+  });
+  win.on('close', function () {
+    addWindow = null;
+  });
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Handle create-new-product Window
 function createNewProductWindow(){
   addWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nuevo Producto'})
@@ -188,10 +207,6 @@ function createProductsWindow(){
 
 }
 
-
-ipcMain.on('loan:newClient',(e) => {
-    createNewProductWindow();
-});
 
 app.on('ready', createWindow)
 

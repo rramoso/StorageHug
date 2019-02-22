@@ -74,7 +74,7 @@
 
               <div class="col-md-1">
 
-                
+
               </div>
               <div class="col-md-5">
                 <div class="form-label-group ">
@@ -85,14 +85,14 @@
 
               <div class="col-md-3">
                 <div class="form-label-group">
-                  <input type="number" id="productQuantity" class="form-control" placeholder="Last name" required="required">
+                  <input name="quantity"type="number" id="productQuantity" class="form-control" placeholder="Last name" required="required">
                   <label for="productQuantity">Cantidad</label>
                 </div>
               </div>
               <div class="col-md-2">
                 <div class="form-label-group">
 
-                  <input type="number" id="productPrice" class="form-control" placeholder="Last name" required="required">
+                  <input type="number" name="price" id="productPrice" class="form-control" placeholder="Last name" required="required">
                   <label for="productPrice">Precio</label>
                 </div>
               </div>
@@ -105,6 +105,18 @@
 
             </div>
           </div>
+          <hr />
+          <div class="form-group">
+            <div class="form-row">
+              <div id="totalQuantity" class="col-md-6">
+                0
+              </div>
+              <div id="totalRevenue" class="col-md-6">
+                0
+              </div>
+            </div>
+          </div>
+          <hr />
           <button type="button" class="btn btn-primary btn-block" id="addSaleBtn">Salvar Venta</button>
         </form>
       </div>

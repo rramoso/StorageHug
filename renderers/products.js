@@ -23,7 +23,17 @@ db.collection("products").get().then(function(querySnapshot) {
     table.draw()
 
 });
+const ipc = require('electron').ipcRenderer;
 
+const updateBtn = document.getElementById('updateBtn')
+
+updateBtn.addEventListener('click', function () {
+  ipc.send('update-notify-value','fuck')
+  console.log('push');
+  // Close this window
+  // var window = remote.getCurrentWindow();
+  // window.close();
+})
 // 'name':document.getElementById('productName').value,
 // 'type':document.getElementById('productType').value,
 // 'quantity':document.getElementById('productQuantity').value,

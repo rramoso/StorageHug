@@ -3,23 +3,28 @@ require('../firebase/firebase.js')
 const remote = require('electron').remote;
 
 var db = firebase.firestore();
-
+const ipc = require('electron').ipcRenderer;
 var table = $('#dataTable').DataTable();
-db.collection("products").get().then(function(querySnapshot) {
 
-    querySnapshot.forEach(function(doc) {
-        // doc.data() is never undefined for query doc snapshots
+ipc.on('saleID', (event, message) => {
 
-        var row = [doc.data().name,
-                   doc.data().type,
-                   doc.data().quantity,
-                   doc.data().cost,
-                   doc.data().price,
-                   doc.data().description]
-        table.row.add(row);
+
+    document.getElementById('saleId').innerHTML = message
+
+    db.collection("sales").doc(message).get().then(function(querySnapshot) {
+        document.getElementById('clientName').innerHTML = querySnapshot.data().client
+        var products = querySnapshot.data().products;
+        for(var i = 0; i < products.length; i++){
+          var row = [
+                products[i].productName,
+                products[i].productQuantity,
+                products[i].productPrice
+          ]
+          table.row.add(row)
+        }
+        table.draw()
 
     });
 
-    table.draw()
 
-});
+})
