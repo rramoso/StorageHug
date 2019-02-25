@@ -29,16 +29,31 @@ autocomplete(document.getElementById("productName"), products);
 autocomplete(document.getElementById("clientName"), clients);
 document.getElementsByName('quantity').forEach(function (elem) {
   elem.addEventListener("input", function() {
-    var quantityTotalIni = parseInt(document.getElementById('totalQuantity').innerHTML)
 
-    document.getElementById('totalQuantity').innerHTML = quantityTotalIni + parseInt(elem.value)
+    var totalElems = 0
+    document.getElementsByName('quantity').forEach((quanti)=>{
+      var valueInElem = quanti.value
+      if(valueInElem == ''){
+        valueInElem = 0;
+      }
+      totalElems += parseInt(valueInElem);
+    })
+    document.getElementById('totalQuantity').innerHTML = parseInt(totalElems)
 });
+
 document.getElementsByName('price').forEach(function (elem) {
   elem.addEventListener("input", function() {
-       var quantityTotalIni = parseInt(document.getElementById('totalQuantity').innerHTML)
+      var totalElems = 0
 
-       document.getElementById('totalRevenue').innerHTML = quantityTotalIni + parseInt(elem.value)
-   });
+      document.getElementsByName('price').forEach((quanti)=>{
+        var valueInElem = quanti.value
+        if(valueInElem == ''){
+          valueInElem = 0;
+        }
+        totalElems += parseInt(valueInElem);
+      })
+      document.getElementById('totalRevenue').innerHTML = parseInt(totalElems)
+    });
 
 })
 })
@@ -55,18 +70,38 @@ addProduct.addEventListener('click', function(){
 
   document.getElementsByName('quantity').forEach(function (elem) {
     elem.addEventListener("input", function() {
-         var quantityTotalIni = parseInt(document.getElementById('totalQuantity').innerHTML)
-         document.getElementById('totalQuantity').innerHTML = quantityTotalIni + parseInt(elem.value)
-     });
+      var totalElems = 0
+      var valueInElem = elem.value
+      if(valueInElem == ''){
+        valueInElem = 0;
+      }
+      document.getElementsByName('quantity').forEach((quanti)=>{
+        var valueInElem = quanti.value
+        if(valueInElem == ''){
+          valueInElem = 0;
+        }
+        totalElems += parseInt(valueInElem);
+      })
+      document.getElementById('totalQuantity').innerHTML = parseInt(totalElems)
+    });
 
   })
 
   document.getElementsByName('price').forEach(function (elem) {
     elem.addEventListener("input", function() {
-         var priceInTotal = parseInt(document.getElementById('totalRevenue').innerHTML)
-         var priceInteger = priceInTotal + parseInt(elem.value)
-         document.getElementById('totalRevenue').innerHTML = priceInteger
-     });
+      var totalElems = 0
+
+      document.getElementsByName('price').forEach((quanti)=>{
+
+        var valueInElem = quanti.value
+        console.log('valueInElem: '+valueInElem);
+        if(valueInElem == ''){
+          valueInElem = 0;
+        }
+          totalElems += parseInt(valueInElem);
+      })
+      document.getElementById('totalRevenue').innerHTML = parseInt(totalElems)
+    });
 
   })
 })
@@ -98,7 +133,9 @@ saveSaleBtn.addEventListener('click', function(){
   var today = new Date();
 
   var sale = {'client':document.getElementById('clientName').value,
-              'products': saleProducts, 'Date': today}
+              'products': saleProducts, 'Date': today,
+            'revenue': parseInt(document.getElementById('totalRevenue').innerHTML),
+            'totalProducts':parseInt(document.getElementById('totalQuantity').innerHTML)}
 
   for(var i = 0; i < sale.products.length; i++){
     confirmSale(sale.products[i].productName,sale.products[i].productQuantity,sale,productsToBuy);
