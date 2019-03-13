@@ -13,6 +13,9 @@ ipc.on('saleID', (event, message) => {
 
     db.collection("sales").doc(message).get().then(function(querySnapshot) {
         document.getElementById('clientName').innerHTML = querySnapshot.data().client
+        document.getElementById('totalRevenue').innerHTML = querySnapshot.data().revenue
+        document.getElementById('totalQuantity').innerHTML = querySnapshot.data().totalProducts
+
         var products = querySnapshot.data().products;
         for(var i = 0; i < products.length; i++){
           var row = [
