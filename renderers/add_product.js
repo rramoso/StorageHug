@@ -12,6 +12,7 @@ addProductBtn.addEventListener('click',()=>{
                  'price':document.getElementById('productPrice').value,
                  'description':document.getElementById('productDescription').value,
                  'date':document.getElementById('productDate').value,
+                 'toSale': document.getElementById('productPurpose').checked,
                  'createdDate': today
                 }
 
@@ -20,8 +21,12 @@ addProductBtn.addEventListener('click',()=>{
       alert('Product Creado');
       var window = remote.getCurrentWindow();
       window.close();
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
   })
-  .catch(function(error) {
-      console.error("Error adding document: ", error);
-  });
+
+addMoreProduct.addEventListener('click',() =>{
+
 })

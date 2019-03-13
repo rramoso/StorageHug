@@ -14,10 +14,17 @@ const mainMenuTemplate = [
     label: 'Producto',
     submenu:[
       {
-        label: 'Agregar Producto',
+        label: 'Nuevo Producto',
         accelerator: process.platform == 'darwin'? 'Command+P':'Ctrl+P',
         click(){
           createNewProductWindow();
+        }
+      },
+      {
+        label: 'Compra Producto',
+        accelerator: process.platform == 'darwin'? 'Command+P':'Ctrl+P',
+        click(){
+          createPurchaseProductWindow();
         }
       },
       {
@@ -26,17 +33,9 @@ const mainMenuTemplate = [
         click(){
           createProductsWindow();
         }
-      },
+      },  { type: 'separator' },
       {
-        label: 'Agregar Cliente',
-        accelerator: process.platform == 'darwin'? 'Command+Shift+C':'Ctrl+Shift+C',
-
-        click(){
-          createNewClientWindow();
-        }
-      },
-      {
-        label: 'Quit',
+        label: 'Cerrar',
         accelerator: process.platform == 'darwin'? 'Command+Q':'Ctrl+Q',
         click(){
           app.quit()
@@ -199,6 +198,16 @@ function createNewSaleWindow(){
   addWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nueva Venta'})
 
   addWindow.loadFile('./templates/sale.html')
+  addWindow.on('close', function () {
+    addWindow = null;
+  });
+
+}
+
+function createPurchaseProductWindow(){
+  addWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nueva Venta'})
+
+  addWindow.loadFile('./templates/purchaseProduct.html')
   addWindow.on('close', function () {
     addWindow = null;
   });

@@ -8,7 +8,9 @@
 #deleteBtn{
   padding-top: 2px;
 }
-
+.checkboxBoder{
+      border-color: #adb5bd;
+}
 /*!
  * Bootstrap v4.2.1 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
