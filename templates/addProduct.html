@@ -43,6 +43,7 @@
 
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
+  <link href="css/autocomplete.css" rel="stylesheet">
   <!-- Bootstrap core JavaScript-->
 
 
@@ -114,14 +115,25 @@
             </div>
           </div>
           <button type="button" class="btn btn-primary btn-block" id="addProductBtn">Agregar Producto</button>
+
+          <div class="text-center">
+            <button class="d-block small mt-3" id="includeProduct">Incluir mas productos</button>
+          </div>
+          <hr />
+          <div id="productLine">
+
+          </div>
         </form>
-        <div class="text-center">
-        </div>
       </div>
     </div>
   </div>
+  <script src="js/autocomplete.js"></script>
   <script>
   require('../renderers/add_product.js')
+  function deleteRow(btn) {
+    var row = btn.parentNode.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+  }
 
 
   </script>
