@@ -27,7 +27,36 @@ db.collection("clients").get().then(function(querySnapshot) {
 
 autocomplete(document.getElementById("productName"), products);
 autocomplete(document.getElementById("clientName"), clients);
+
+productQuantity.addEventListener('click',function(){
+
+  if(products.includes(productName.value)){
+    db.collection("products").doc(productName.value).get().then(function(querySnapshot) {
+        productPrice.value = querySnapshot.data().price
+    });
+  }
+})
+productQuantity.addEventListener('input',function(){
+
+  if(products.includes(productName.value)){
+    db.collection("products").doc(productName.value).get().then(function(querySnapshot) {
+        productPrice.value = querySnapshot.data().price * productQuantity.value
+        var totalElems = 0
+
+        document.getElementsByName('price').forEach((quanti)=>{
+          var valueInElem = quanti.value
+          if(valueInElem == ''){
+            valueInElem = 0;
+          }
+          totalElems += parseInt(valueInElem);
+        })
+        document.getElementById('totalRevenue').innerHTML = parseInt(totalElems)
+    });
+  }
+})
+
 document.getElementsByName('quantity').forEach(function (elem) {
+
   elem.addEventListener("input", function() {
 
     var totalElems = 0
@@ -66,8 +95,37 @@ var saveSaleBtn = document.getElementById('addSaleBtn');
 addProduct.addEventListener('click', function(){
   productLine.appendChild(newProductLine());
   var productLineIndex = document.getElementById('productLine').children.length - 1
-  autocomplete(document.getElementById("productName"+productLineIndex), products);
+  var productNameLineIndex = document.getElementById("productName"+ productLineIndex)
+  var productQuantityLineIndex = document.getElementById("productQuantity"+ productLineIndex)
+  var productPriceLineIndex = document.getElementById("productPrice"+ productLineIndex)
+  autocomplete(document.getElementById("productName"+ productLineIndex), products);
 
+  productQuantityLineIndex.addEventListener('click',function(){
+
+    if(products.includes(productNameLineIndex.value)){
+      db.collection("products").doc(productNameLineIndex.value).get().then(function(querySnapshot) {
+          productPriceLineIndex.value = querySnapshot.data().price * productQuantityLineIndex.value
+      });
+    }
+  })
+  productQuantityLineIndex.addEventListener('input',function(){
+
+    if(products.includes(productNameLineIndex.value)){
+      db.collection("products").doc(productNameLineIndex.value).get().then(function(querySnapshot) {
+          productPriceLineIndex.value = querySnapshot.data().price * productQuantityLineIndex.value
+          var totalElems = 0
+
+          document.getElementsByName('price').forEach((quanti)=>{
+            var valueInElem = quanti.value
+            if(valueInElem == ''){
+              valueInElem = 0;
+            }
+            totalElems += parseInt(valueInElem);
+          })
+          document.getElementById('totalRevenue').innerHTML = parseInt(totalElems)
+      });
+    }
+  })
   document.getElementsByName('quantity').forEach(function (elem) {
     elem.addEventListener("input", function() {
       var totalElems = 0
@@ -142,12 +200,12 @@ saveSaleBtn.addEventListener('click', function(){
     confirmSale(sale.products[i].productName,sale.products[i].productQuantity,sale,productsToBuy);
   }
 })
-//.where('quantity','>=',productQuantity)
+
 function confirmSale(productName, productQuantity,sale,productsToBuy){
   var productsNotEnough = []
   db.collection('products').doc(productName).get()
     .then(function(querySnapshot) {
-      // console.log(productName);
+
       if(productQuantity <= querySnapshot.data().quantity){
         productsToBuy.push(productName)
       }else{
@@ -164,7 +222,9 @@ function confirmSale(productName, productQuantity,sale,productsToBuy){
         }
     })
 }
-
+function dejaver() {
+alert('Venta salvada exitosamente');
+}
 function subtractQuantity(p,saleProdQuantity,sale){
 
   p.get().then(function(querySnapshot) {
@@ -174,11 +234,10 @@ function subtractQuantity(p,saleProdQuantity,sale){
       var newQ = actualQuantity - saleProdQuantity;
       p.update({'quantity':newQ})
       productsToUpdate.push(querySnapshot.data().name)
-        console.log('productsToUpdate: '+productsToUpdate.length);
-          console.log('sale.products.length: '+sale.products.length);
+
       if(productsToUpdate.length == sale.products.length){
         productsToUpdate = []
-        alert('Venta salvada exitosamente');
+        dejaver()
       }
   })
 }

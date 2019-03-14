@@ -4,7 +4,7 @@ const remote = require('electron').remote;
 
 var db = firebase.firestore();
 var products = []
-
+var productsToUpdate = []
 db.collection("products").where('quantity','>',0).get().then(function(querySnapshot) {
 
     querySnapshot.forEach(function(doc) {
@@ -16,6 +16,22 @@ db.collection("products").where('quantity','>',0).get().then(function(querySnaps
 
 addProductBtn.addEventListener('click',()=>{
   var today = new Date();
+  var productsToInclude = []
+
+  var numOfProducts = productLine.children.length;
+
+  for(var i =0; i<numOfProducts; i++){
+    var prodName = 'productName'
+    var prodQuantity = 'productQuantity'
+
+      prodName += i
+      prodQuantity += i
+
+    productsToInclude.push({
+      'productName' : document.getElementById(prodName).value,
+      'productQuantity' : document.getElementById(prodQuantity).value
+    })
+  }
   var product = {'name':document.getElementById('productName').value,
                  'type':document.getElementById('productType').value,
                  'quantity':parseInt(document.getElementById('productQuantity').value),
@@ -24,19 +40,69 @@ addProductBtn.addEventListener('click',()=>{
                  'description':document.getElementById('productDescription').value,
                  'date':document.getElementById('productDate').value,
                  'toSale': document.getElementById('productPurpose').checked,
+                 'includedProducts': productsToInclude,
                  'createdDate': today
                 }
 
-  db.collection('products').doc(product.name).set(product)
-  .then(function(docRef) {
-      alert('Product Creado');
-      var window = remote.getCurrentWindow();
-      window.close();
+  var toInclude = []
+  for (var i = 0; i < productsToInclude.length; i++) {
+    confirmProducts(productsToInclude[i].productName,productsToInclude[i].productQuantity,productsToInclude,toInclude,product)
+  }
+
+})
+
+
+
+  function confirmProducts(productName,productQuantity,productsToInclude,toInclude,product){
+    var productsNotEnough = []
+
+    db.collection('products').doc(productName).get()
+      .then(function(querySnapshot) {
+
+
+        if(productQuantity > querySnapshot.data().quantity){
+          productsNotEnough.push(productName)
+        }else{
+          toInclude.push(productName)
+        }
+      }).then(function() {
+          if(toInclude.length == productsToInclude.length){
+            console.log('Se pueden guardar');
+            db.collection('products').doc(product.name).set(product)
+            .then(function(docRef) {
+                alert('Product Creado');
+                var window = remote.getCurrentWindow();
+                window.close();
+              })
+              .catch(function(error) {
+                  console.error("Error adding document: ", error);
+              });
+            for (var i = 0; i < productsToInclude.length; i++) {
+              var toSub = parseInt(productsToInclude[i].productQuantity);
+              var p = db.collection('products').doc(productsToInclude[i].productName);
+              subtractQuantity(p,toSub,productsToInclude)
+            }
+
+          }else if(productsNotEnough.length > 0){
+            alert("Los siguientes productos no tienen suficiente: "+productsNotEnough)
+          }
+      })
+  }
+  function subtractQuantity(p,saleProdQuantity,products){
+
+    p.get().then(function(querySnapshot) {
+
+        var actualQuantity = querySnapshot.data().quantity;
+
+        var newQ = actualQuantity - saleProdQuantity;
+        p.update({'quantity':newQ})
+        productsToUpdate.push(querySnapshot.data().name)
+
+        if(productsToUpdate.length == products.length){
+          productsToUpdate = []
+        }
     })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    });
-  })
+  }
 
 includeProduct.addEventListener('click',() =>{
   productLine.appendChild(newProductLine());
