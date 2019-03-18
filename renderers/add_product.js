@@ -45,8 +45,21 @@ addProductBtn.addEventListener('click',()=>{
                 }
 
   var toInclude = []
-  for (var i = 0; i < productsToInclude.length; i++) {
-    confirmProducts(productsToInclude[i].productName,productsToInclude[i].productQuantity,productsToInclude,toInclude,product)
+  if(productsToInclude.length > 0){
+    for (var i = 0; i < productsToInclude.length; i++) {
+      console.log(productsToInclude[i].productName);
+      confirmProducts(productsToInclude[i].productName,productsToInclude[i].productQuantity,productsToInclude,toInclude,product)
+    }
+  }else {
+    db.collection('products').doc(product.name).set(product)
+    .then(function(docRef) {
+        alert('Product Creado');
+        var window = remote.getCurrentWindow();
+        window.close();
+      })
+      .catch(function(error) {
+          console.error("Error adding document: ", error);
+      });
   }
 
 })
