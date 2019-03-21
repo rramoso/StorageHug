@@ -127,7 +127,7 @@ const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
-  mainWindow.loadFile('./templates/main.html')
+  mainWindow.loadFile('./templates/login.html')
   // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
 
 
@@ -175,7 +175,16 @@ function createAllReportsWindow(){
 }
 
 
+// Handle create-new-product Window
+function createLoginWindow(){
+  addWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nuevo Producto'})
 
+  addWindow.loadFile('./templates/login.html')
+  addWindow.on('close', function () {
+    addWindow = null;
+  });
+
+}
 
 
 
