@@ -3,11 +3,51 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, Menu} = require('electron')
 const ipcMain = require('electron').ipcMain
+const remote = require('electron').remote;
 // loadFile('./vendor/bootstrap/js/bootstrap.bundle.min.js')
 
 
 let mainWindow
+const salesMenuTemplate = [
+  {
+    label: 'Producto',
+    submenu:[
+      {
+        label: 'Inventario',
+        accelerator: process.platform == 'darwin'? 'Command+K':'Ctrl+K',
+        click(){
+          createProductsWindow();
+        }
+      },  { type: 'separator' },
+      {
+        label: 'Cerrar',
+        accelerator: process.platform == 'darwin'? 'Command+Q':'Ctrl+Q',
+        click(){
+          app.quit()
+        }
+      }
+    ]
+  },{
+      label: 'Ventas',
+      submenu:[
+      {
+        label: 'Agregar Venta',
+        accelerator: process.platform == 'darwin'? 'Command+Shift+V':'Ctrl+Shift+V',
 
+        click(){
+          createNewSaleWindow();
+        }
+      },
+        {
+          label: 'Todas las Ventas',
+          accelerator: process.platform == 'darwin'? 'Command+Shift+S':'Ctrl+Shift+S',
+          click(){
+            createAllSaleWindow();
+          }
+        }
+      ]
+  }
+]
 const mainMenuTemplate = [
 
   {
@@ -123,21 +163,19 @@ const mainMenuTemplate = [
 
 ]
 const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+const salesMenu = Menu.buildFromTemplate(salesMenuTemplate);
 
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
   mainWindow.loadFile('./templates/login.html')
   // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
-
-
   mainWindow.on('close', function () {
     app.quit();
 
   });
 
-
-  Menu.setApplicationMenu(mainMenu);
+  mainWindow.setMenu(null)
 }
 // Handle View one sale
 ipcMain.on('update-notify-value',  (event, arg) => {
@@ -187,9 +225,34 @@ function createLoginWindow(){
 }
 
 
+function createMainWindow(){
+  // Create the browser window.
+  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow.loadFile('./templates/index.html')
+  // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
 
+    mainWindow.setMenu(main)
 
+}
 
+ipcMain.on('admin-view',  (event, arg) => {
+  console.log(arg);
+
+  // var window = remote.getCurrentWindow();
+  // window.close();
+  mainWindow.loadFile('./templates/main.html')
+  Menu.setApplicationMenu(mainMenu);
+})
+ipcMain.on('sales-view',  (event, arg) => {
+  console.log(arg);
+
+  // var window = remote.getCurrentWindow();
+  // window.close();
+
+  mainWindow.loadFile('./templates/main.html')
+  Menu.setApplicationMenu(salesMenu);
+
+})
 
 
 // Handle create-new-product Window
