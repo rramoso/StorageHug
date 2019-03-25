@@ -1,0 +1,10 @@
+directories:
+  output: app
+  buildResources: build
+appId: com.blueglasses.app
+productName: StorageHub
+target: NSIS
+nsis:
+  allowToChangeInstallationDirectory: true
+  oneClick: false
+electronVersion: 4.0.1

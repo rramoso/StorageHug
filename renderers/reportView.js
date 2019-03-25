@@ -33,3 +33,31 @@ console.log(message);
 
 
 })
+
+ipc.on('reportMonth', (event, message) => {
+
+
+console.log(message);
+    db.collection("sales").where('Month','==',message).get().then(function (snap) {
+      var totalProducts = 0
+      var totalRevenue = 0
+      for(var i = 0; i < snap.docs.length; i++){
+        var row = [
+          snap.docs[i].id,
+          snap.docs[i].data().client,
+          snap.docs[i].data().totalProducts,
+          snap.docs[i].data().revenue
+        ]
+        totalProducts += snap.docs[i].data().totalProducts
+        totalRevenue += snap.docs[i].data().revenue
+
+        table.row.add(row);
+      }
+      document.getElementById('totalQuantity').innerHTML = '<b>'+ totalProducts + '</b>'
+      document.getElementById('totalRevenue').innerHTML = '<b>'+ totalRevenue + '</b>'
+
+      table.draw()
+    })
+
+
+})

@@ -7,6 +7,13 @@ var db = firebase.firestore();
 var products = []
 var clients = []
 var productsToUpdate = []
+var loggedUser = ''
+
+ipc.on('loggedUser', (event, message) => {
+
+  loggedUser = message
+
+}
 // Fill products list with products name
 db.collection("products").where('quantity','>',0).get().then(function(querySnapshot) {
 
@@ -191,7 +198,7 @@ saveSaleBtn.addEventListener('click', function(){
   var today = new Date();
   var dateKey = today.getDate()+'-'+parseInt(today.getMonth()+1)+'-'+today.getFullYear()
 
-  var sale = {'client':document.getElementById('clientName').value,
+  var sale = {'client':document.getElementById('clientName').value, soldBy:loggedUser,
               'products': saleProducts, 'DateTimestamp': today,'Date':dateKey,
             'revenue': parseInt(document.getElementById('totalRevenue').innerHTML),
             'totalProducts':parseInt(document.getElementById('totalQuantity').innerHTML)}

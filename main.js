@@ -8,6 +8,7 @@ const remote = require('electron').remote;
 
 
 let mainWindow
+var loggedUser = ''
 const salesMenuTemplate = [
   {
     label: 'Producto',
@@ -125,12 +126,19 @@ const mainMenuTemplate = [
       label: 'Reportes',
       submenu:[
         {
-          label: 'Todas los Reportes',
+          label: 'Reportes diario',
           accelerator: process.platform == 'darwin'? 'Command+Shift+R':'Ctrl+Shift+R',
           click(){
             createAllReportsWindow();
           }
-        }
+        },
+          {
+            label: 'Reportes mensual',
+            accelerator: process.platform == 'darwin'? 'Command+Shift+R':'Ctrl+Shift+R',
+            click(){
+              createMonthlyReportsWindow();
+            }
+          }
       ]
   },
   {
@@ -203,13 +211,29 @@ ipcMain.on('report-view',  (event, arg) => {
   });
 })
 
+ipcMain.on('report-month',  (event, arg) => {
+  console.log(arg);
+
+  let win = new BrowserWindow({width: 800, height: 500,title:arg})
+  win.loadFile('./templates/reportView.html')
+  win.webContents.on('did-finish-load', () => {
+      win.webContents.send('reportMonth', arg);
+  });
+  win.on('close', function () {
+    addWindow = null;
+  });
+})
 function createAllReportsWindow(){
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
   mainWindow.loadFile('./templates/reports.html')
   // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
-
-
+}
+function createMonthlyReportsWindow(){
+  // Create the browser window.
+  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow.loadFile('./templates/monthlyReport.html')
+  // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
 }
 
 
@@ -236,7 +260,7 @@ function createMainWindow(){
 }
 
 ipcMain.on('admin-view',  (event, arg) => {
-  console.log(arg);
+  loggedUser = arg
 
   // var window = remote.getCurrentWindow();
   // window.close();
@@ -244,8 +268,7 @@ ipcMain.on('admin-view',  (event, arg) => {
   Menu.setApplicationMenu(mainMenu);
 })
 ipcMain.on('sales-view',  (event, arg) => {
-  console.log(arg);
-
+  loggedUser = arg
   // var window = remote.getCurrentWindow();
   // window.close();
 
@@ -270,6 +293,9 @@ function createNewSaleWindow(){
   addWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nueva Venta'})
 
   addWindow.loadFile('./templates/sale.html')
+  addWindow.webContents.on('did-finish-load', () => {
+      addWindow.webContents.send('loggedUser', loggedUser);
+  });
   addWindow.on('close', function () {
     addWindow = null;
   });

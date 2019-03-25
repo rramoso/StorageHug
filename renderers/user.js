@@ -33,10 +33,10 @@ login.addEventListener('click',function (event) {
   password = document.getElementById('password').value
   if(user in users && password == users[user].password){
     if(user == admin){
-      ipc.send('admin-view','admin-view')
+      ipc.send('admin-view',user.username)
     }else{
 
-        ipc.send('sales-view','sales-view')
+        ipc.send('sales-view',user.username)
     }
   }
     // console.log(user);

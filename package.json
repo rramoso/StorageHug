@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "package": "",
-    "build": "electron-packager . MarisolSurprises"
+    "build": "electron-packager . MarisolSurprises",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -20,6 +21,7 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^4.0.1",
+    "electron-builder": "^20.39.0",
     "electron-packager": "^13.1.0",
     "jquery": "^3.3.1"
   },
@@ -27,5 +29,17 @@
     "datatables.net": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "firebase": "^5.8.0"
+  },
+  "build": {
+    "appId": "com.blueglasses.app",
+    "productName": "StorageHub",
+    "target": "NSIS",
+    "directories": {
+      "output": "app"
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }
