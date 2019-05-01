@@ -73,6 +73,9 @@
                   <div id="clientName">
                     Nombre Cliente
                   </div>
+                  <div class="form-label-group">
+                    <button id="printBill" type="button" name="button">Print</button>
+                  </div>
                 </div>
               </div>
 
@@ -127,7 +130,9 @@
   <script src="js/autocomplete.js"></script>
   <script>
   require('../renderers/saleView.js')
-
+  document.getElementById('printBill').addEventListener('click', function(evt) {
+     window.print();
+   })
   </script>
   <!-- Bootstrap core JavaScript-->
   <script src="vendor/jquery/jquery.min.js"></script>

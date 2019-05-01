@@ -138,6 +138,13 @@ const mainMenuTemplate = [
             click(){
               createMonthlyReportsWindow();
             }
+          },
+          {
+            label: 'Reporte de Productos',
+            accelerator: process.platform == 'darwin'? 'Command+Shift+R':'Ctrl+Shift+R',
+            click(){
+              createProductReportWindow();
+            }
           }
       ]
   },
@@ -212,6 +219,19 @@ ipcMain.on('report-view',  (event, arg) => {
 })
 
 ipcMain.on('report-month',  (event, arg) => {
+  console.log(arg);
+
+  let win = new BrowserWindow({width: 800, height: 500,title:arg})
+  win.loadFile('./templates/reportView.html')
+  win.webContents.on('did-finish-load', () => {
+      win.webContents.send('reportMonth', arg);
+  });
+  win.on('close', function () {
+    addWindow = null;
+  });
+})
+
+ipcMain.on('report-product',  (event, arg) => {
   console.log(arg);
 
   let win = new BrowserWindow({width: 800, height: 500,title:arg})
@@ -312,6 +332,15 @@ function createPurchaseProductWindow(){
 
 }
 
+function createProductReportWindow(){
+  addWindow = new BrowserWindow({width: 800, height: 500,title:'Agregar Nueva Venta'})
+
+  addWindow.loadFile('./templates/Reports/product_report.html')
+  addWindow.on('close', function () {
+    addWindow = null;
+  });
+
+}
 
 function createViewSaleWindow(){
   addWindow = new BrowserWindow({width: 800, height: 500,title:'Vista Venta'})

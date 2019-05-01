@@ -2,7 +2,7 @@
 require('../firebase/firebase.js')
 
 const remote = require('electron').remote;
-
+const ipc = require('electron').ipcRenderer;
 var db = firebase.firestore();
 var products = []
 var clients = []
@@ -13,7 +13,7 @@ ipc.on('loggedUser', (event, message) => {
 
   loggedUser = message
 
-}
+})
 // Fill products list with products name
 db.collection("products").where('quantity','>',0).get().then(function(querySnapshot) {
 
@@ -100,11 +100,14 @@ var addProduct = document.getElementById('addProduct');
 var saveSaleBtn = document.getElementById('addSaleBtn');
 
 addProduct.addEventListener('click', function(){
+  console.log('loggedUser: '+loggedUser);
+
   productLine.appendChild(newProductLine());
   var productLineIndex = document.getElementById('productLine').children.length - 1
   var productNameLineIndex = document.getElementById("productName"+ productLineIndex)
   var productQuantityLineIndex = document.getElementById("productQuantity"+ productLineIndex)
   var productPriceLineIndex = document.getElementById("productPrice"+ productLineIndex)
+
   autocomplete(document.getElementById("productName"+ productLineIndex), products);
 
   productQuantityLineIndex.addEventListener('click',function(){
@@ -133,43 +136,14 @@ addProduct.addEventListener('click', function(){
       });
     }
   })
-  document.getElementsByName('quantity').forEach(function (elem) {
-    elem.addEventListener("input", function() {
-      var totalElems = 0
-      var valueInElem = elem.value
-      if(valueInElem == ''){
-        valueInElem = 0;
-      }
-      document.getElementsByName('quantity').forEach((quanti)=>{
-        var valueInElem = quanti.value
-        if(valueInElem == ''){
-          valueInElem = 0;
-        }
-        totalElems += parseInt(valueInElem);
-      })
-      document.getElementById('totalQuantity').innerHTML = parseInt(totalElems)
-    });
 
-  })
+  updatePriceQuatity()
 
-  document.getElementsByName('price').forEach(function (elem) {
-    elem.addEventListener("input", function() {
-      var totalElems = 0
 
-      document.getElementsByName('price').forEach((quanti)=>{
-
-        var valueInElem = quanti.value
-        console.log('valueInElem: '+valueInElem);
-        if(valueInElem == ''){
-          valueInElem = 0;
-        }
-          totalElems += parseInt(valueInElem);
-      })
-      document.getElementById('totalRevenue').innerHTML = parseInt(totalElems)
-    });
-
-  })
 })
+
+
+
 
 
 saveSaleBtn.addEventListener('click', function(){
@@ -261,14 +235,44 @@ function saveSale(sale,saleId){
       })
 }
 
+function updatePriceQuatity() {
+  document.getElementsByName('quantity').forEach(function (elem) {
+    elem.addEventListener("input", function() {
+      var totalElems = 0
+      var valueInElem = elem.value
+      if(valueInElem == ''){
+        valueInElem = 0;
+      }
+      document.getElementsByName('quantity').forEach((quanti)=>{
+        var valueInElem = quanti.value
+        if(valueInElem == ''){
+          valueInElem = 0;
+        }
+        totalElems += parseInt(valueInElem);
+      })
+      document.getElementById('totalQuantity').innerHTML = parseInt(totalElems)
+    });
 
-// <div class="col-md-1">
-//
-//   <div class="form-label-group ">
-//   <input id="deleteProduct" class="btn btn-danger" type="button" value="x" onclick="deleteRow(this)"/>
-//   </div>
-// </div>
+  })
 
+  document.getElementsByName('price').forEach(function (elem) {
+    elem.addEventListener("input", function() {
+      var totalElems = 0
+
+      document.getElementsByName('price').forEach((quanti)=>{
+
+        var valueInElem = quanti.value
+        console.log('valueInElem: '+valueInElem);
+        if(valueInElem == ''){
+          valueInElem = 0;
+        }
+          totalElems += parseInt(valueInElem);
+      })
+      document.getElementById('totalRevenue').innerHTML = parseInt(totalElems)
+    });
+
+  })
+}
 function newProductLine(){
 
   var n = document.getElementById('productLine').children.length;
@@ -284,8 +288,9 @@ function newProductLine(){
       input0.setAttribute('class','btn btn-danger')
       input0.setAttribute('type','button')
       input0.setAttribute('value','x')
-      input0.setAttribute('id','deleteBtn')
-      input0.setAttribute('onclick','deleteRow(this)')
+      input0.setAttribute('id','deleteBtn'+n)
+      input0.setAttribute('name','deleteBtn')
+      input0.setAttribute('onclick','deleteRow(this);')
         div01.appendChild(input0)
         div0.appendChild(div01)
         item.appendChild(div0)

@@ -9,7 +9,6 @@ var table = $('#dataTable').DataTable();
 ipc.on('reportID', (event, message) => {
 
 
-console.log(message);
     db.collection("sales").where('Date','==',message).get().then(function (snap) {
       var totalProducts = 0
       var totalRevenue = 0
@@ -61,3 +60,6 @@ console.log(message);
 
 
 })
+
+
+ip

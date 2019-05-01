@@ -134,8 +134,34 @@
   function deleteRow(btn) {
     var row = btn.parentNode.parentNode.parentNode;
     row.parentNode.removeChild(row);
+    var totalQuantitylElems = 0
+    var totaPricelElems = 0
+
+    document.getElementsByName('quantity').forEach(function (elem) {
+      var valueInElem = elem.value
+      if(valueInElem == ''){
+        valueInElem = 0;
+      }
+      totalQuantitylElems += parseInt(valueInElem);
+
+
+    })
+
+    document.getElementById('totalQuantity').innerHTML = parseInt(totalQuantitylElems)
+
+    var totaPricelElems = 0
+    document.getElementsByName('price').forEach(function (elem) {
+
+        var valueInElem = elem.value
+        if(valueInElem == ''){
+          valueInElem = 0;
+        }
+          totaPricelElems += parseInt(valueInElem);
+    })
+    document.getElementById('totalRevenue').innerHTML = parseInt(totaPricelElems)
+
   }
-  
+
   </script>
   <!-- Bootstrap core JavaScript-->
   <script src="vendor/jquery/jquery.min.js"></script>

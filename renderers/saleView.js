@@ -1,10 +1,12 @@
 // Initialize Firebase
 require('../firebase/firebase.js')
 const remote = require('electron').remote;
+const BrowserWindow = remote.BrowserWindow;
 
 var db = firebase.firestore();
 const ipc = require('electron').ipcRenderer;
 var table = $('#dataTable').DataTable();
+
 
 ipc.on('saleID', (event, message) => {
 
