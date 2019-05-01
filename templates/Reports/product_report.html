@@ -69,17 +69,44 @@
           Productos </button>
         </div>
         <div class="card-body">
+          <div class="form-group">
+            <div class="form-row">
+              <div  class="col-md-3">
+                <b> Total de Productos:</b>
+              </div>
+              <div id="totalQuantity" class="col-md-3">
+                0
+              </div>
+                <div  class="col-md-3">
+                <b>  Total de valor  RD$:</b>
+                </div>
+              <div id="totalRevenue" class="col-md-3">
+                0
+              </div>
+              <div class="col-md-3">
+                <div class="form-label-group">
+                  <button id="dwnExcell" type="button" class="btn btn-warning">Imprimir</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
                   <th>Nombre</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unidad</th>
+                  <th>Valor Total</th>
                 </tr>
               </thead>
               <tfoot>
                 <tr>
                   <th>Nombre</th>
-
+                  <th>Cantidad</th>
+                  <th>Precio Venta</th>
+                  <th>Valor Total</th>
                 </tr>
               </tfoot>
               <tbody>

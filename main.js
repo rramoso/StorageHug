@@ -4,6 +4,7 @@
 const {app, BrowserWindow, Menu} = require('electron')
 const ipcMain = require('electron').ipcMain
 const remote = require('electron').remote;
+const {download} = require("electron-dl");
 // loadFile('./vendor/bootstrap/js/bootstrap.bundle.min.js')
 
 
@@ -189,7 +190,11 @@ function createWindow () {
     app.quit();
 
   });
-
+  ipcMain.on('download', (event, info) => {
+    console.log('info: '+info);
+          download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
+              .then(dl => window.webContents.send("download complete", dl.getSavePath()));
+      })
   mainWindow.setMenu(null)
 }
 // Handle View one sale

@@ -28,7 +28,9 @@
   "dependencies": {
     "datatables.net": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
-    "firebase": "^5.8.0"
+    "electron-dl": "^1.14.0",
+    "firebase": "^5.8.0",
+    "node-excel-export": "^1.4.4"
   },
   "build": {
     "appId": "com.blueglasses.app",
