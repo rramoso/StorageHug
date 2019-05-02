@@ -12,6 +12,8 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
 
+  <script type="text/javascript" src"xlsx.full.min.js"></script>
+    <script type="text/javascript" src"FileSaver.min.js"></script>
   <!-- Core plugin JavaScript-->
   <script type="text/javascript" src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
@@ -85,7 +87,7 @@
               </div>
               <div class="col-md-3">
                 <div class="form-label-group">
-                  <button id="dwnExcell" type="button" class="btn btn-warning">Imprimir</button>
+                  <button id="dwnExcell" type="button" class="btn btn-success">Descargar Excel</button>
                 </div>
               </div>
             </div>
@@ -131,12 +133,46 @@
   </a>
   <script>
   require('../../renderers/Reports/product_report.js')
+  var productsData = require('../../renderers/Reports/product_report.js')
+
+  const XLSX = require('xlsx');
+  const fileSaver = require('file-saver');
+
   const {ipcRenderer} = require('electron');
 
   function show(productName) {
     // ipcRenderer.send('report-product',productName)
     console.log(productName);
   }
+  function s2ab(s) {
+                var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+                var view = new Uint8Array(buf);  //create uint8array as viewer
+                for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+                return buf;
+  }
+
+  dwnExcell = document.getElementById('dwnExcell');
+
+  dwnExcell.addEventListener('click', ()=>{
+
+    var wb = XLSX.utils.book_new();
+    wb.Props = {
+                  Title: "SheetJS Tutorial",
+                  Subject: "Test",
+                  Author: "Red Stapler",
+                  CreatedDate: new Date(2017,12,19)
+          };
+
+    wb.SheetNames.push("TotalProductos");
+    var ws_data = [['hello' , 'world'],['klk','con','klk']];
+    var ws = XLSX.utils.aoa_to_sheet(productsData.dataTableData);
+    wb.Sheets["TotalProductos"] = ws;
+    var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+    // console.log(productsData.dataTableData);
+    saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'Reporte de Productos (Marisol'+"'s"+' Surprise) -'+new Date()+'.xlsx');
+
+
+  })
   </script>
 
 

@@ -254,6 +254,7 @@ function createAllReportsWindow(){
   mainWindow.loadFile('./templates/reports.html')
   // mainWindow.loadFile('./vendor/jquery/jquery.min.js')
 }
+
 function createMonthlyReportsWindow(){
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})

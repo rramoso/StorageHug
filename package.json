@@ -29,8 +29,10 @@
     "datatables.net": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "electron-dl": "^1.14.0",
+    "file-saver": "^2.0.1",
     "firebase": "^5.8.0",
-    "node-excel-export": "^1.4.4"
+    "node-excel-export": "^1.4.4",
+    "xlsx": "^0.14.3"
   },
   "build": {
     "appId": "com.blueglasses.app",
