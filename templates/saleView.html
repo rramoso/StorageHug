@@ -21,7 +21,7 @@
 
   <!-- Custom scripts for all pages-->
   <script type="text/javascript" src="js/sb-admin.min.js"></script>
-
+  <script type="text/javascript" src="js/JSPrintManager.js"></script>
   <!-- Demo scripts for this page-->
   <script type="text/javascript" src="js/demo/datatables-demo.js"></script>
   <script type="text/javascript" src="js/demo/chart-area-demo.js"></script>
@@ -79,6 +79,10 @@
               </div>
               <div class="col-md-3">
                 <div class="form-label-group">
+                   <div id="installedPrinters">
+                      <label for="installedPrinterName">Select an installed Printer:</label>
+                      <select class="form-control" name="installedPrinterName" id="installedPrinterName"></select>
+                  </div>
                   <button id="printBill" type="button" class="btn btn-warning">Imprimir</button>
                 </div>
               </div>
@@ -126,9 +130,124 @@
   <script src="js/autocomplete.js"></script>
   <script>
   require('../renderers/saleView.js')
+
   document.getElementById('printBill').addEventListener('click', function(evt) {
-     window.print();
+     printIntoPrinter();
    })
+  var isFiscalBill = false;
+  var bill_date = '16/06/2019';
+  var client_rnc = '0'*9
+  var product = "BEJIGA GIGANTE METALICO CON MAS VAINAS Y PLATEADO"
+  //WebSocket settings
+    JSPM.JSPrintManager.auto_reconnect = true;
+    JSPM.JSPrintManager.start();
+    JSPM.JSPrintManager.WS.onStatusChanged = function () {
+        if (jspmWSStatus()) {
+            //get client installed printers
+            JSPM.JSPrintManager.getPrinters().then(function (myPrinters) {
+                var options = '';
+                for (var i = 0; i < myPrinters.length; i++) {
+                    options += '<option>' + myPrinters[i] + '</option>';
+                }
+                $('#installedPrinterName').html(options);
+            });
+        }
+    };
+ 
+    //Check JSPM WebSocket status
+    function jspmWSStatus() {
+        if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Open)
+            return true;
+        else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.Closed) {
+            alert('La dependenci JSPrintManager (JSPM) no ha sido instalada, por favor contactar al desarrollador.');
+            return false;
+        }
+        else if (JSPM.JSPrintManager.websocket_status == JSPM.WSStatus.BlackListed) {
+            alert('JSPM has blacklisted this website!');
+            return false;
+        }
+    }
+    //Do printing...
+    function printIntoPrinter(o) {
+      var twentyFiveSpace = '                         '
+        if (jspmWSStatus()) {
+            //Create a ClientPrintJob
+            var cpj = new JSPM.ClientPrintJob();
+            //Set Printer type (Refer to the help, there many of them!)
+            if ($('#useDefaultPrinter').prop('checked')) {
+                cpj.clientPrinter = new JSPM.DefaultPrinter();
+            } else {
+                cpj.clientPrinter = new JSPM.InstalledPrinter($('#installedPrinterName').val());
+            }
+            //Set content to print...
+            //Create ESP/POS commands for sample label
+            var esc = '\x1B'; //ESC byte in hex notation
+            var newLine = '\x0A'; //LF byte in hex notation
+            var table = document.getElementById('dataTable')
+            var cmds = esc + "@"; //Initializes the printer (ESC @)
+            cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
+            cmds += "   MARISOL'S SURPRISES"; //text to print
+            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += newLine;
+            cmds += "            Calle General Cabrera #77";
+            cmds += newLine;
+            cmds += "           Santiago de los Caballeros,RD";
+            cmds += newLine;
+            cmds += "                Tel: 809-382-8781";
+            cmds += newLine;
+            cmds += "                  RNC:#########";
+            cmds += newLine;
+            cmds += "           **FACTURA CONSUMIDOR FINAL**";
+            cmds += newLine+newLine;
+            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += "CLIENTE:"+ document.getElementById('clientName').innerHTML;
+            cmds += newLine
+            if(isFiscalBill){
+              cmds += 'RNC:'+client_rnc;
+              cmds += newLine+newLine;
+            }
+            cmds += 'Fecha: '+bill_date
+            cmds += newLine+newLine;
+            cmds += "CANT  PRODUCTO                  PRECIO    MONTO"
+            cmds += newLine+newLine;
+            cmds += "---   --------                  ------    -----"  
+            cmds += newLine+newLine;
+            for(var i = 1, row; row = table.rows[i]; i++){
+              
+              cmds += row.cells[1].innerHTML; 
+              cmds += '  ';
+              product = row.cells[0].innerHTML.slice(0,25)
+              cmds += product.padEnd(25);
+              cmds += '    ';
+              cmds += '--'
+              cmds += '    ';
+              cmds += row.cells[2].innerHTML.padStart(5)
+              cmds += newLine;
+            }
+            
+            cmds += newLine+newLine;
+            cmds += 'SUB TOTAL                          '+document.getElementById('totalRevenue').innerHTML;
+            cmds += newLine;
+            cmds += 'ITBIS                               0.00';
+            cmds += newLine;
+            cmds += 'TOTAL                              '+document.getElementById('totalRevenue').innerHTML;
+            cmds += newLine+newLine;
+            cmds += esc + '!' + '\x18';
+            cmds += '   MONTO RECIBIDO                   '+document.getElementById('totalRevenue').innerHTML;
+            cmds += newLine;
+            cmds += '   MONTO DEVUELTO                   0.00';
+            cmds += newLine + newLine;
+             //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
+            cmds += 'CANT ARTICULOS COMPRADOS '+document.getElementById('totalQuantity').innerHTML;
+            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += newLine + newLine;
+            cmds += '11/03/13  19:53:17';
+ 
+            cpj.printerCommands = cmds;
+            //Send print job to printer!
+            cpj.sendToClient();
+        }
+    }
   </script>
   <!-- Bootstrap core JavaScript-->
   <script src="vendor/jquery/jquery.min.js"></script>
