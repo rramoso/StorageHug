@@ -23,7 +23,7 @@
     "electron": "^4.0.1",
     "electron-builder": "^20.40.2",
     "electron-packager": "^13.1.0",
-    "jquery": "^3.4.0"
+    "jquery": "^3.5.0"
   },
   "dependencies": {
     "datatables.net": "^1.10.19",
